@@ -1,0 +1,10 @@
+global:
+  postgresql:
+    postgresqlPassword: mysecretpassword
+postgresqlUsername: myuser
+postgresqlDatabase: mydb
+service:
+  type: ClusterIP
+persistence:
+  enabled: true
+  size: 1Gi
