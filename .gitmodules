@@ -1,0 +1,4 @@
+
+[submodule "postgres-operator-examples"]
+	path = postgres-operator-examples
+	url = git@github.com:RSO-2024-Group-12/postgres-operator-examples.git

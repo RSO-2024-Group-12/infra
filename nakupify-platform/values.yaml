@@ -1,0 +1,39 @@
+# Default values for nakupify-platform.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# As the main platform chart these values are global and shared among all sub-charts.
+
+
+# keycloakDb:
+#   name: nakupify-keycloak-db
+#   user: nakupify-keycloak-user
+#   password: nakupify-keycloak-password
+#   database: nakupify-keycloak-db
+#   host: nakupify-keycloak-db
+
+postgresDb:
+  enable: true
+  autoCreateUserSchema: true
+  # name:  nakupify-postgres-db # Name of the PostgresCluster, default is .Release.Name
+  #monitoring: true
+  users:
+    - name: "keycloakuser"
+      password:  # will generate a random password if not set
+        type: ASCII
+      databases:
+        - "keycloak_db"
+      options: "NOSUPERUSER,CREATEDB,CREATEROLE"
+  # also can create multiple instances
+  instanceName: nakupify-postgres-instance
+  instanceSize: 1Gi
+  instanceMemory: 2Gi
+  instanceCPU: 2 # 2 cores
+  # backupSize: 5Gi
+  # backupsStorageClassName: "standard"
+  # pgBackRestConfig:
+  #   manual:
+  #     repoName: repo1
+  #     options:
+  #       - --type=full
+  # instanceReplicas?
+  # service: 
