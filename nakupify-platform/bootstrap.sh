@@ -21,7 +21,4 @@ if [ $RES -ne 0 ]; then
   exit $RES
 fi
 echo "OLM installation complete."
-# echo "Waiting for OLM pods to be ready..."
-# kubectl wait --for=condition=Available=True --timeout=300s deployment/olm-operator -n olm
-# kubectl wait --for=condition=Available=True --timeout=300s deployment/catalog-operator -n olm
-# echo "OLM pods are ready."
+

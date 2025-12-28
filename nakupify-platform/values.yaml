@@ -26,8 +26,8 @@ postgresDb:
   # also can create multiple instances
   instanceName: nakupify-postgres-instance
   instanceSize: 1Gi
-  instanceMemory: 2Gi
-  instanceCPU: 2 # 2 cores
+  instanceMemory: 1Gi # azure VMs are too weak for more
+  instanceCPU: 1 # azure VMs are too weak for more
   # backupSize: 5Gi
   # backupsStorageClassName: "standard"
   # pgBackRestConfig:
