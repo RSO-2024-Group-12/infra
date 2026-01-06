@@ -26,16 +26,39 @@ appVersion: "0.0.1"
 dependencies:
   # keycloak is installed through a CRD and Operator Lifercycle Manager (OLM) so we don't need to declare it as a dependency here.
 
-  # - name: pgo
-  #   version: 5.3.5
-  #   repository: file://../postgres-operator-examples/helm/install
+  - name: pgo # PostgreSQL Operator
+    version: 6.0.0
+    repository: oci://registry.developers.crunchydata.com/crunchydata
+    alias: postgres-operator
 
-  # - name: postgrescluster
-  #   version: 5.7.4
-  #   repository: file://../postgres-operator-examples/helm/postgres
-  #   alias: keycloak-db
+  - name: crunchy-monitoring
+    version: 0.5.0
+    repository: oci://registry.developers.crunchydata.com/crunchydata
+    alias: postgres-monitoring
+    depends-on:
+      - postgres-operator
 
   - name: postgrescluster
     version: 5.7.4
-    repository: file://../postgres-operator-examples/helm/postgres
+    repository: "oci://ghcr.io/RSO-2024-Group-12"
     alias: postgresDb
+    depends-on:
+      - postgres-operator
+      - postgres-monitoring
+  
+  - name: kafka
+    version: 18.0.1
+    repository: https://helm-charts.itboon.top/kafka
+    condition: kafka.enabled
+
+  - name: prometheus
+    version: 28.0.0
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled
+
+  - name: nakupify-keycloak
+    alias: keycloak
+    version: 0.1.0
+    repository: "oci://ghcr.io/RSO-2024-Group-12"
+    depends-on:
+      - postgresDb

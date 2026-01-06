@@ -3,26 +3,25 @@
 # Declare variables to be passed into your templates.
 # As the main platform chart these values are global and shared among all sub-charts.
 
-
-# keycloakDb:
-#   name: nakupify-keycloak-db
-#   user: nakupify-keycloak-user
-#   password: nakupify-keycloak-password
-#   database: nakupify-keycloak-db
-#   host: nakupify-keycloak-db
-
 postgresDb:
   enable: true
   autoCreateUserSchema: true
   # name:  nakupify-postgres-db # Name of the PostgresCluster, default is .Release.Name
   #monitoring: true
   users:
-    - name: "keycloakuser"
+    # this user is only used to create the initial database, and roles/users, secret is created automatically
+    - name: "initializer"
       password:  # will generate a random password if not set
         type: ASCII
-      databases:
-        - "keycloak_db"
-      options: "NOSUPERUSER,CREATEDB,CREATEROLE"
+      # databases:
+      #   - "nakupify_db"
+      options: "SUPERUSER,CREATEDB,CREATEROLE"
+    # - name: "keycloakuser"
+    #   password:  # will generate a random password if not set
+    #     type: ASCII
+    #   databases:
+    #     - "keycloak_db"
+    #   options: "NOSUPERUSER,CREATEDB,CREATEROLE"
   # also can create multiple instances
   instanceName: nakupify-postgres-instance
   instanceSize: 1Gi
@@ -37,3 +36,21 @@ postgresDb:
   #       - --type=full
   # instanceReplicas?
   # service: 
+
+keycloak:
+  dbInit:
+    db:
+      user: keycloakuser
+      database: keycloak_db
+      schema: keycloak_schema
+
+    pgAdminUser: initializer
+    pgImageTag: "17"
+
+
+kafka:
+  enabled: true
+  #metrics:
+
+prometheus:
+  enabled: false
