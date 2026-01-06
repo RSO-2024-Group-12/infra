@@ -34,7 +34,7 @@ jobs:
           # Find all directories containing Chart.yaml
           find . -maxdepth 2 -type f -name "Chart.yaml" -exec dirname {} \; | while read chartdir; do
             echo "Packaging chart in $chartdir"
-            helm package -u "$chartdir"
+            helm package "$chartdir"
           done
 
       - name: Push chart to GHCR
