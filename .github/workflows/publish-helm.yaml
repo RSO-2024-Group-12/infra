@@ -29,14 +29,12 @@ jobs:
             --username ${{ github.actor }} \
             --password-stdin
 
-      - name: Package chart
+      - name: Package charts
         run: |
           # Find all directories containing Chart.yaml
           find . -maxdepth 2 -type f -name "Chart.yaml" -exec dirname {} \; | while read chartdir; do
-            echo "Updating dependencies"
-            helm dependency update "$chartdir"
             echo "Packaging chart in $chartdir"
-            helm package "$chartdir"
+            helm package -u "$chartdir"
           done
 
       - name: Push chart to GHCR
