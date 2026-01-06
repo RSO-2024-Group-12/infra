@@ -3,7 +3,7 @@ name: Publish Keycloak Helm Chart
 on:
   push:
     tags:
-      - 'chart-nakupify-keycloak-*'   # example: chart-myapp-0.1.0
+      - 'chart/nakupify-keycloak-*'   # example: chart-myapp-0.1.0
 
 permissions:
   contents: read

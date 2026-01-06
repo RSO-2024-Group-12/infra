@@ -3,7 +3,7 @@ name: Publish ArgoCD Helm Chart
 on:
   push:
     tags:
-      - 'chart-argo-cd-*'   # example: chart-myapp-0.1.0
+      - 'chart/argo-cd-*'   # example: chart-myapp-0.1.0
 
 permissions:
   contents: read

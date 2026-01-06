@@ -3,7 +3,7 @@ name: Publish Platform Helm Charts
 on:
   push:
     tags:
-      - 'chart-nakupify-platform-*'   # example: chart-myapp-0.1.0
+      - 'chart/nakupify-platform-*'   # example: chart-myapp-0.1.0
 
 permissions:
   contents: read

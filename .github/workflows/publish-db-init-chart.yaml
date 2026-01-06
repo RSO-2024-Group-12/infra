@@ -3,7 +3,7 @@ name: Publish DB-init Helm Chart
 on:
   push:
     tags:
-      - 'chart-db-init-*'   # example: chart-myapp-0.1.0
+      - 'chart/db-init-*'   # example: chart-myapp-0.1.0
 
 permissions:
   contents: read
