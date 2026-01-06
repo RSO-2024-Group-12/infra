@@ -1,9 +1,9 @@
-name: Publish Helm Charts
+name: Publish Keycloak Helm Chart
 
 on:
   push:
     tags:
-      - 'chart-*'   # example: chart-myapp-0.1.0
+      - 'chart-nakupify-keycloak-*'   # example: chart-myapp-0.1.0
 
 permissions:
   contents: read
@@ -12,7 +12,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,18 +28,11 @@ jobs:
             --username ${{ github.actor }} \
             --password-stdin
 
-      - name: Package charts
+      - name: Package chart
         run: |
-          # Find all directories containing Chart.yaml
-          find . -maxdepth 2 -type f -name "Chart.yaml" -exec dirname {} \; | while read chartdir; do
-            echo "Packaging chart in $chartdir"
-            helm package "$chartdir"
-          done
+          helm package -u ./nakupify-keycloak
 
       - name: Push chart to GHCR
         run: |
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          for tgz in *.tgz; do
-            echo "Pushing $tgz"
-            helm push "$tgz" oci://ghcr.io/$OWNER
-          done
+          helm push *.tgz oci://ghcr.io/$OWNER
