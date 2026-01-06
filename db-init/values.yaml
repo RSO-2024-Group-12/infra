@@ -1,0 +1,39 @@
+db:
+  # Name of the role assoicatited with the database
+  user:
+  
+  # Password for the database user
+  password:
+
+  # Name of the created database
+  database:
+
+  # Created initial schema in the database
+  schema:
+
+  # Name of the postgres service to connect to, gets address and port from there, uses lookup so this option wont work in template mode
+  serviceName:
+  
+  # Only used if useLookup is false
+  hostAddress:
+  # Only used if useLookup is false
+  hostPort: 
+
+useLookup: true
+
+# Service name to be used in the generated secret
+# Secret format is <Release.Name>-<ServiceName>-db-secret
+# serviceName
+
+# Postgres image to use for db-init job, also can be used to specify repo
+pgImage: postgres
+
+# Postgres image tag to use for db-init job
+pgImageTag: "17-alpine"
+
+# Admin user secret to use to connect to Postgres and create the database and user
+pgAdminUserSecret:
+  # Name of the secret
+  secretName: 
+  # Key in the secret that contains the postgres connection URI
+  secretKey: 

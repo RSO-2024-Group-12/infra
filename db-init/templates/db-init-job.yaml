@@ -1,0 +1,67 @@
+{{- $createdSecretName := include "db-init.secretName" . -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-keycloak-db
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded,hook-failed"
+  namespace: {{ .Release.Namespace }}
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-init
+          image: {{ .Values.pgImage }}:{{ .Values.pgImageTag }}
+          env:
+            - name: PGURI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required ".Values.pgAdminUserSecret.secretName is required!" .Values.pgAdminUserSecret.secretName }}
+                  key: {{ required ".Values.pgAdminUserSecret.secretKey is required!" .Values.pgAdminUserSecret.secretKey }}
+            - name: NEWPWD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $createdSecretName }}
+                  key: "password"
+            - name: NEWUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $createdSecretName }}
+                  key: "user"
+            - name: NEWDB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $createdSecretName }}
+                  key: "database"
+            - name: NEWSCHEMA
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $createdSecretName }}
+                  key: "schema"
+          command:
+            - /bin/bash
+            - -x
+            - -s
+            - "<<EOF"
+            # - printf "%s" "$PGPASSWORD" | psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER"
+            - |
+              printf "%s" "$PGPASSWORD" | psql "$PGURI" -c \ "
+              CREATE ROLE "$NEWUSER" WITH LOGIN PASSWORD "$NEWPWD"
+                NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT;
+              CREATE DATABASE IF NOT EXISTS "$NEWDB" OWNER "$NEWUSER" ENCODING 'UTF8';
+              REVOKE ALL ON DATABASE postgres FROM "$NEWUSER";
+              GRANT ALL PRIVILEGES ON DATABASE "$NEWDB" TO "$NEWUSER";
+              \c "$NEWDB";
+              CREATE SCHEMA IF NOT EXISTS "$NEWSCHEMA" AUTHORIZATION "$NEWUSER";
+              REVOKE ALL ON SCHEMA public FROM PUBLIC;
+              REVOKE ALL ON SCHEMA public FROM "$NEWUSER";
+              ALTER DEFAULT PRIVILEGES FOR ROLE "$NEWUSER" GRANT ALL ON TABLES TO "$NEWUSER";
+              ALTER DEFAULT PRIVILEGES FOR ROLE "$NEWUSER" GRANT ALL ON SEQUENCES TO "$NEWUSER";
+              ALTER DEFAULT PRIVILEGES FOR ROLE "$NEWUSER" GRANT ALL ON FUNCTIONS TO "$NEWUSER";
+            - EOF
+               
+    #   serviceAccountName: db-init-sa

@@ -1,0 +1,28 @@
+{{- if .Values.useLookup -}}
+Using lookup mode! You better be using helm install or upgrade!
+{{- end -}}
+
+Using values:
+    DB User: {{ .Values.db.user }}
+    DB Name: {{ .Values.db.database }}
+    DB Schema: {{ .Values.db.schema }}
+{{- if .Values.useLookup -}}
+    # Values using lookup
+    DB Host: (from service named {{ .Values.db.serviceName }})
+    DB Port: (from service named {{ .Values.db.serviceName }})
+{{- else -}}
+    DB Host: {{ .Values.db.hostAddress }}
+    DB Port: {{ .Values.db.hostPort }}
+{{- end }}
+
+Job is using Postgres image: {{ .Values.pgImage }}:{{ .Values.pgTag }}
+
+Using admin secret:
+    with name: {{ .Values.pgAdminUserSecret.name }}
+    and key: {{ .Values.pgAdminUserSecret.key }}
+
+The database initialization job has been created. To check its status, use the following command:
+
+  kubectl get jobs -n {{ .Release.Namespace }} init-keycloak-db
+
+
