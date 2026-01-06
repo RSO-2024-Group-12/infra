@@ -1,0 +1,6 @@
+org:
+  url: https://github.com/organizations/RSO-2024-Group-12/
+  githubAppID: "2600428"
+  githubAppInstallationID: "102782152"
+  githubAppEnterpriseBaseUrl: https://github.com/organizations/RSO-2024-Group-12/
+  privateKeyFile: argocdrso12.2026-01-05.private-key.pem
