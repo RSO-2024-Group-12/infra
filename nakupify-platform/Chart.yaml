@@ -40,7 +40,7 @@ dependencies:
 
   - name: postgrescluster
     version: 5.7.4
-    repository: "oci://ghcr.io/RSO-2024-Group-12"
+    repository: "oci://ghcr.io/rso-2024-group-12"
     alias: postgresDb
     depends-on:
       - postgres-operator
@@ -59,6 +59,6 @@ dependencies:
   - name: nakupify-keycloak
     alias: keycloak
     version: 0.1.0
-    repository: "oci://ghcr.io/RSO-2024-Group-12"
+    repository: "oci://ghcr.io/rso-2024-group-12"
     depends-on:
       - postgresDb
