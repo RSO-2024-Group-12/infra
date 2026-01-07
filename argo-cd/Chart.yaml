@@ -27,4 +27,5 @@ dependencies:
   - name: argo-cd
     version: 9.2.4
     repository: https://argoproj.github.io/argo-helm
+    alias: parent-argo-cd
   

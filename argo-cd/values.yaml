@@ -1,6 +1,22 @@
-org:
-  url: https://github.com/organizations/RSO-2024-Group-12/
-  githubAppID: "2600428"
-  githubAppInstallationID: "102782152"
-  githubAppEnterpriseBaseUrl: https://github.com/organizations/RSO-2024-Group-12/
-  privateKeyFile: argocdrso12.2026-01-05.private-key.pem
+# Access to organization resources is done with a GitHub App that was created for this purpose
+
+parent-argo-cd:
+  configs:
+    credentialTemplates:
+      github-repos:
+        url: https://github.com/argoproj
+        githubAppID: "2600428"
+        githubAppInstallationID: "102782152"
+        githubAppEnterpriseBaseUrl: https://github.com/organizations/RSO-2024-Group-12/
+        # Use the private key generated when creating the GitHub App
+        # Override this value with help from generated values-private.yaml
+        githubAppPrivateKey: FILL ME IN
+      ghcr-oci:
+        url: oci://ghcr.io/rso-2024-group-12
+        type: oci
+        githubAppID: "2600428"
+        githubAppInstallationID: "102782152"
+        githubAppEnterpriseBaseUrl: https://github.com/organizations/RSO-2024-Group-12/
+        # Use the private key generated when creating the GitHub App
+        # Override this value with help from generated values-private.yaml
+        githubAppPrivateKey: FILL ME IN
