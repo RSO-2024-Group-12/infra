@@ -1,0 +1,37 @@
+{{- /* {{- $privateKeyPath := required "path to githubAppPrivateKey is required" .Values.githubAppPrivateKeyPath -}} */ -}}
+# Only used for ArgoCD Application that deploys ArgoCD itself, once a bootstrapped version of ArgoCD is already running with the required credentials
+# This could be better by using some secret strore or vault, but for now this will do
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-cd-app
+  namespace: {{ .Release.Namespace }}
+  finalizers:
+    # The default behaviour is foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: argo-cd-app
+    # app.kubernetes.io/part-of: argo-cd
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+spec:
+  project: default
+  source:
+    repoURL: {{ index .Chart.Sources 0 }}
+    chart: {{ .Chart.Name}}
+    targetRevision: {{ .Chart.Version | quote }}
+    # helm:
+      # fileParameters:
+        # - name: parent-argo-cd.configs.credentialTemplates.github-repos.githubAppPrivateKey
+          # path: 
+        # - name: parent-argo-cd.configs.credentialTemplates.ghcr-oci.githubAppPrivateKey
+          # path: 
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{ .Release.Namespace }}
+  info:
+    - name: chart
+      value: {{ .Chart.Name }}-{{ .Chart.Version | quote }}
+    - name: Description
+      value: {{ .Chart.Description }}

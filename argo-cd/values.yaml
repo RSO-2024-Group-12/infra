@@ -2,6 +2,7 @@
 
 parent-argo-cd:
   configs:
+    # Or should i create them myself?
     credentialTemplates:
       github-repos:
         url: https://github.com/argoproj
