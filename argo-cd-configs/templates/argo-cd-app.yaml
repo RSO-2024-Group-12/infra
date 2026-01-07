@@ -32,6 +32,15 @@ spec:
     namespace: {{ .Release.Namespace }}
   info:
     - name: chart
-      value: {{ .Chart.Name }}-{{ .Chart.Version | quote }}
+      value: {{ .Chart.Name }}-{{ .Chart.Version }}
     - name: Description
       value: {{ .Chart.Description }}
+  syncPolicy:
+    automated:
+      enabled: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

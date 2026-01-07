@@ -1,5 +1,5 @@
 apiVersion: v3
-name: argo-cd
+name: argo-cd-configs
 description: Main Argo CD deployment for the RSO 2024 Group 12 project
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -28,9 +28,9 @@ sources:
   # Source of chart
   - oci://ghcr.io/rso-2024-group-12/argo-cd
 
-dependencies:
-  - name: argo-cd
-    version: 9.2.4
-    repository: https://argoproj.github.io/argo-helm
-    alias: parent-argo-cd
+# dependencies:
+#   - name: argo-cd
+#     version: 9.2.4
+#     repository: https://argoproj.github.io/argo-helm
+#     alias: parent-argo-cd
   
