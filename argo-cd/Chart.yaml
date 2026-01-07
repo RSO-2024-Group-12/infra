@@ -24,7 +24,9 @@ version: 0.1.1
 appVersion: "0.0.1"
 
 sources:
-  - oci://ghcr.io/rso-2024-group-12
+  - https://github.com/RSO-2024-Group-12/infra
+  # Source of chart
+  - oci://ghcr.io/rso-2024-group-12/argo-cd
 
 dependencies:
   - name: argo-cd

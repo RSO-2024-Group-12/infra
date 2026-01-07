@@ -18,7 +18,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: {{ index .Chart.Sources 0 }}
+    repoURL: {{ index .Chart.Sources 1 }}
     chart: {{ .Chart.Name}}
     targetRevision: {{ .Chart.Version | quote }}
     # helm:
