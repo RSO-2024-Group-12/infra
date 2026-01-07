@@ -30,7 +30,7 @@ jobs:
 
       - name: Package chart
         run: |
-          helm package -u ./argo-cd
+          helm package -u ./argo-cd-configs
 
       - name: Push chart to GHCR
         run: |
