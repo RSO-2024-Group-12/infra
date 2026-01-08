@@ -2,6 +2,8 @@ name: Publish DB-init Helm Chart
 
 on:
   push:
+    paths:
+      - ./db-init/**
     tags:
       - 'chart/db-init-*'   # example: chart-myapp-0.1.0
 

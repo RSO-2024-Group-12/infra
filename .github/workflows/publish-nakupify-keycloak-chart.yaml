@@ -2,6 +2,8 @@ name: Publish Keycloak Helm Chart
 
 on:
   push:
+    paths:
+      - ./nakupify-keycloak/**
     tags:
       - 'chart/nakupify-keycloak-*'   # example: chart-myapp-0.1.0
 

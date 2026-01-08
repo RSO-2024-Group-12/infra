@@ -2,6 +2,8 @@ name: Publish nakupify-operators Helm Chart
 
 on:
   push:
+    paths:
+      - ./nakupify-operators/**
     tags:
       - 'chart/nakupify-operators-*'   # example: chart-myapp-0.1.0
 

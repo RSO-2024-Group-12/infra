@@ -2,6 +2,8 @@ name: Publish Platform Helm Charts
 
 on:
   push:
+    paths:
+      - ./nakupify-platform/**
     tags:
       - 'chart/nakupify-platform-*'   # example: chart-myapp-0.1.0
 
