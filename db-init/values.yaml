@@ -2,28 +2,20 @@ db:
   # Name of the role assoicatited with the database
   user:
   
-  # Password for the database user
+  # Password for the database user, if empty, generates a random one
   password:
 
-  # Name of the created database
+  # Name of the created database or schema in database
   database:
 
   # Created initial schema in the database
   schema:
-
-  # Name of the postgres service to connect to, gets address and port from there, uses lookup so this option wont work in template mode
-  serviceName:
   
-  # Only used if useLookup is false
+  # Address of postgres database
   hostAddress:
-  # Only used if useLookup is false
+
+  # Port of postgres database
   hostPort: 
-
-useLookup: true
-
-# Service name to be used in the generated secret
-# Secret format is <Release.Name>-<ServiceName>-db-secret
-# serviceName
 
 # Postgres image to use for db-init job, also can be used to specify repo
 pgImage: postgres

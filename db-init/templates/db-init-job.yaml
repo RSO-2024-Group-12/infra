@@ -50,7 +50,7 @@ spec:
             # - printf "%s" "$PGPASSWORD" | psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER"
             - |
               printf "%s" "$PGPASSWORD" | psql "$PGURI" -c \ "
-              CREATE ROLE "$NEWUSER" WITH LOGIN PASSWORD "$NEWPWD"
+              CREATE ROLE IF NOT EXISTS "$NEWUSER" WITH LOGIN PASSWORD "$NEWPWD"
                 NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT;
               CREATE DATABASE IF NOT EXISTS "$NEWDB" OWNER "$NEWUSER" ENCODING 'UTF8';
               REVOKE ALL ON DATABASE postgres FROM "$NEWUSER";
