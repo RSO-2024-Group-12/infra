@@ -15,5 +15,8 @@ dbInit:
     database: keycloak_db
     schema: keycloak_schema
     # serviceName: 
+    useLookup: false
+    hostAddress:
+    hostPort:
 
 serviceName: keycloak
