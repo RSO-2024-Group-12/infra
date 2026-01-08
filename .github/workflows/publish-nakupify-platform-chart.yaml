@@ -36,4 +36,4 @@ jobs:
       - name: Push chart to GHCR
         run: |
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          helm push *.tgz oci://ghcr.io/$OWNER
+          helm push *.tgz oci://ghcr.io/$OWNER/charts
