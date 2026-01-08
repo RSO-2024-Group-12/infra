@@ -4,13 +4,15 @@ configs:
       url: https://github.com/RSO-2024-Group-12
       githubAppID: "2600428"
       githubAppInstallationID: "102782152"
-      githubAppEnterpriseBaseUrl: https://github.com/organizations/RSO-2024-Group-12/
+      #githubAppEnterpriseBaseUrl: https://github.com/organizations/RSO-2024-Group-12/
       githubAppPrivateKey: FILL ME IN
 
   repositories:
     ghcr-helm:
-      url: ghcr.io/rso-2024-group-12
+      url: ghcr.io/rso-2024-group-12/charts
       type: helm
       enableOCI: "true"
       username: argo-cd # can be anything tbh just password matters
       password: FILL IN
+  params:
+    application.namespaces: app-*

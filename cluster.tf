@@ -120,15 +120,20 @@ variable "github_app_key_path" {
   type = string
 }
 
+variable "argocd_namespace" {
+  type = string
+  default = "argocd"
+}
+
 resource "helm_release" "argocd" {
   name             = "argocd"
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
   cleanup_on_fail  = true
   version          = "9.2.4"
-  namespace        = "argocd"
+  namespace        = var.argocd_namespace
   create_namespace = true
-  upgrade_install  = true
+  # upgrade_install  = true
   wait             = true
   wait_for_jobs    = true
   values           = [
@@ -145,6 +150,18 @@ resource "helm_release" "argocd" {
     }
   ]
 }
+
+# data "helm_template" "argo_cd_initial_app_deploy" {
+#   name = "argo-cd-configs"
+#   chart = "./argo-cd-configs"
+#   namespace = var.argocd_namespace
+#   devel = true # to ignore all versions and just install from filepath
+# }
+
+# resource "kubernetes_manifest" "apply_initial_configs" {
+#   depends_on = [ data.helm_template.argo_cd_initial_app_deploy ]
+#   manifest = 
+# }
 
 # resource "helm_release" "argocd-config" {
 #   name             = "argocd-config"
