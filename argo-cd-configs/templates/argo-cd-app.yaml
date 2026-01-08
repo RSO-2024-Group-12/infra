@@ -18,8 +18,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: {{ index .Chart.Sources 1 }}
-    chart: {{ .Chart.Name}}
+    repoURL: oci://ghcr.io/rso-2024-group-12/argo-cd-configs
+    chart: argo-cd-configs
+    path: .
     targetRevision: {{ .Chart.Version | quote }}
     helm:
       releaseName: {{ .Chart.Name }}

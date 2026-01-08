@@ -10,10 +10,19 @@ credentials:
   github-repos:
     url: https://github.com/RSO-2024-Group-12
     type: github
+  # ghcr-helm:
+  #   url: ghcr.io/rso-2024-group-12
+  #   type: helm
+  #   enableOCI: "true"
+  # ghcr-https:
+  #   url: https://ghcr.io/
+  #   type: helm
+
+repositories:
   ghcr-helm:
-    url: ghcr.io/rso-2024-group-12
     type: helm
-    enable-oci: "true"
+    url: ghcr.io/rso-2024-group-12
+    enableOCI: true
 
 # parent-argo-cd:
   # configs:

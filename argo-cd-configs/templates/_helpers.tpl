@@ -16,6 +16,6 @@ githubAppEnterpriseBaseUrl: {{ .enterpriseBaseUrl | b64enc }}
 
 {{- define "my-argo-cd.b64enc" -}}
 {{- range $key, $value := . -}}
-{{ $key }}: {{ $value | b64enc }}
+{{ $key }}: {{ $value | toString | b64enc }}
 {{ end -}}
 {{- end -}}
