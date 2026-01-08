@@ -1,9 +1,10 @@
 name: Publish Platform Helm Charts
 
 on:
+  workflow_dispatch:
   push:
     paths:
-      - ./nakupify-platform/**
+      - nakupify-platform/**
     tags:
       - 'chart/nakupify-platform-*'   # example: chart-myapp-0.1.0
 

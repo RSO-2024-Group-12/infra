@@ -1,9 +1,10 @@
 name: Publish nakupify-operators Helm Chart
 
 on:
+  workflow_dispatch:
   push:
     paths:
-      - ./nakupify-operators/**
+      - nakupify-operators/**
     tags:
       - 'chart/nakupify-operators-*'   # example: chart-myapp-0.1.0
 

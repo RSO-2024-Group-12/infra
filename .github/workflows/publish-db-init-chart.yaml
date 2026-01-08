@@ -1,9 +1,10 @@
 name: Publish DB-init Helm Chart
 
 on:
+  workflow_dispatch:
   push:
     paths:
-      - ./db-init/**
+      - db-init/**
     tags:
       - 'chart/db-init-*'   # example: chart-myapp-0.1.0
 

@@ -1,9 +1,10 @@
 name: Publish Keycloak Helm Chart
 
 on:
+  workflow_dispatch:
   push:
     paths:
-      - ./nakupify-keycloak/**
+      - nakupify-keycloak/**
     tags:
       - 'chart/nakupify-keycloak-*'   # example: chart-myapp-0.1.0
 
