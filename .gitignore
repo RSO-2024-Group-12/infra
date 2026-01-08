@@ -3,3 +3,6 @@
 .terraform/
 .terraform.lock.hcl
 *.tgz
+*.pem
+private-values.yaml
+terraform.tfvars
