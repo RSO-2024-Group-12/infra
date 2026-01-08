@@ -13,5 +13,3 @@ dbInit:
   pgAdminUserSecret:
     secretName:
     secretKey:
-
-serviceName: keycloak
