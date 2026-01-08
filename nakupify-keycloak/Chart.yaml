@@ -26,5 +26,5 @@ appVersion: "1.16.0"
 dependencies:
   - name: db-init
     version: 0.1.0
-    repository: "oci://ghcr.io/rso-2024-group-12"
+    repository: "oci://ghcr.io/rso-2024-group-12/charts"
     alias: dbInit
