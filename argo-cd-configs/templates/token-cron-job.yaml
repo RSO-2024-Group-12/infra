@@ -21,7 +21,7 @@ spec:
                   name: github-app-secret
                   key: installation-id
             - name: NAMESPACE
-              value: "argocd"
+              value: {{ .Release.Namespace }}
           command:
             - /bin/sh
             - -c
