@@ -21,6 +21,8 @@ spec:
     repoURL: {{ index .Chart.Sources 1 }}
     chart: {{ .Chart.Name}}
     targetRevision: {{ .Chart.Version | quote }}
+    helm:
+      releaseName: {{ .Chart.Name }}
     # helm:
       # fileParameters:
         # - name: parent-argo-cd.configs.credentialTemplates.github-repos.githubAppPrivateKey

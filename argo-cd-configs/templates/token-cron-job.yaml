@@ -71,7 +71,7 @@ spec:
                 echo "Patching secret: $s"
                 kubectl -n "$NAMESPACE" patch secret "$s" \
                   --type merge \
-                  -p "{\"data\":{\"password\":\"$(echo -n $token | base64)\"}}"
+                  -p "{\"data\":{\"password\":\"$(echo -n $token | base64)\"},\"metadata\":{\"annotations\":{\"cron-job.lastModified\": \"$(date)\"}}}"
               done
 
               echo "Patched all matching secrets successfully"
