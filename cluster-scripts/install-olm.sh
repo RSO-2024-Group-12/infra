@@ -16,7 +16,7 @@ fi
 
 if kubectl get deployment olm-operator -n openshift-operator-lifecycle-manager > /dev/null 2>&1; then
     echo "OLM is already installed in a different configuration. This is common if you are not running a vanilla Kubernetes cluster. Exiting..."
-    exit 1
+    exit 0
 fi
 
 release="$1"
@@ -26,7 +26,7 @@ namespace=olm
 
 if kubectl get deployment olm-operator -n ${namespace} > /dev/null 2>&1; then
     echo "OLM is already installed in ${namespace} namespace. Exiting..."
-    exit 1
+    exit 0
 fi
 
 kubectl create -f "${url}/crds.yaml"

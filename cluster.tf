@@ -19,8 +19,8 @@ terraform {
 
 variable "app_name" {
   description = "Name of application, which will be used to create Kubernetes namespace"
-  type = string
-  nullable = false
+  type        = string
+  nullable    = false
   # validation {
   #   condition     = regex("^.+$")
   #   error_message = "The app_name variable must not be empty."
@@ -31,23 +31,24 @@ variable "app_name" {
 # Helm provider with OCI registries
 ####################################
 
+variable "ghcr_token" {
+  description = "GitHub Container Registry token for authentication"
+  type        = string
+  sensitive   = true
+}
+
 provider "helm" {
   kubernetes = {
     config_path = "~/.kube/config"
   }
 
-  # registries = [
-  #   {
-  #     url      = "oci://localhost:5000"
-  #     username = "username"
-  #     password = "password"
-  #   },
-  #   {
-  #     url      = "oci://private.registry"
-  #     username = "username"
-  #     password = "password"
-  #   }
-  # ]
+  registries = [
+    {
+      url      = "oci://ghcr.io/rso-2024-group-12/"
+      username = "rso-2024-group-12"
+      password = var.ghcr_token
+    },
+  ]
 }
 
 
@@ -97,131 +98,66 @@ provider "kubernetes" {
 resource "null_resource" "install_olm" {
   provisioner "local-exec" {
     command = "chmod u+x ${path.module}/cluster-scripts/install-olm.sh && ${path.module}/cluster-scripts/install-olm.sh v0.38.0"
-  }  
+  }
   lifecycle {
     prevent_destroy = false
 
   }
-  
+
 }
-
-resource "kubernetes_namespace_v1" "nakupify" {
-  provider = kubernetes.minikube
-  metadata {
-    name = var.app_name
-  }
-}
-
-resource "helm_release" "nakupify_platform_operators" {
-  name             = "nakupify-platform-operators"
-  chart            = "${path.module}/nakupify-operators"
-  namespace        = var.app_name
-  create_namespace = false
-  depends_on       = [ null_resource.install_olm, kubernetes_namespace_v1.nakupify ]
-  wait = true
-  cleanup_on_fail = true
-  #upgrade_install = true
-}
-
-resource "helm_release" "nakupify_platform" {
-  # provider = kubernetes.minikube
-  name             = "nakupify-platform"
-  chart            = "${path.module}/nakupify-platform"
-  namespace        = var.app_name
-  create_namespace = false
-  depends_on       = [ helm_release.nakupify_platform_operators ]
-  wait = true
-  upgrade_install = true
-  cleanup_on_fail = true
-}
-
-# resource "kubernetes_manifest" "nakupify_operator_group" {
-#   provider = kubernetes.minikube
-#   depends_on = [ null_resource.install_olm, kubernetes_namespace_v1.nakupify ]
-#   manifest = yamldecode(<<EOF
-# apiVersion: operators.coreos.com/v1
-# kind: OperatorGroup
-# metadata:
-#   name: operatorgroup
-#   namespace: ${var.app_name}
-#   labels:
-#     app.kubernetes.io/name: ${var.app_name}
-#     app.kubernetes.io/instance: ${var.app_name}
-#     app.kubernetes.io/part-of: ${var.app_name}
-#     app.kubernetes.io/managed-by: terraform
-# spec:
-#   targetNamespaces:
-#   - ${var.app_name}
-# EOF
-#   )
-# }
-
-# resource "kubernetes_manifest" "nakupify_keycloak_subscription" {
-#   provider = kubernetes.minikube
-#   depends_on = [ kubernetes_manifest.nakupify_operator_group ]
-#   manifest = yamldecode(<<EOF
-# apiVersion: operators.coreos.com/v1alpha1
-# kind: Subscription
-# metadata:
-#   name: keycloak-operator
-#   namespace: ${var.app_name}
-#   labels:
-#     app.kubernetes.io/name: ${var.app_name}
-#     app.kubernetes.io/instance: ${var.app_name}
-#     app.kubernetes.io/part-of: ${var.app_name}
-#     app.kubernetes.io/managed-by: terraform
-# spec:
-#   channel: fast
-#   name: keycloak-operator
-#   source: operatorhubio-catalog
-#   sourceNamespace: olm
-# EOF
-#   )
-# }
-
-# resource "kubernetes_manifest" "nakupify_postgresql_subscription" {
-#   provider = kubernetes.minikube
-#   depends_on = [ kubernetes_manifest.nakupify_operator_group ]
-#   manifest = yamldecode(<<EOF
-# apiVersion: operators.coreos.com/v1alpha1
-# kind: Subscription
-# metadata:
-#   name: postgresql-operator
-#   namespace: ${var.app_name}
-#   labels:
-#     app.kubernetes.io/name: ${var.app_name}
-#     app.kubernetes.io/instance: ${var.app_name}
-#     app.kubernetes.io/part-of: ${var.app_name}
-#     app.kubernetes.io/managed-by: terraform
-# spec:
-#   channel: v5
-#   name: postgresql
-#   source: operatorhubio-catalog
-#   sourceNamespace: olm
-# EOF
-#   )
-# }
 
 #######################################
 # ArgoCD installation
 #######################################
 
-# resource "helm_release" "argocd" {
-#   name = "argocd"
-#   repository = "https://argoproj.github.io/argo-helm"
-#   chart = "argo-cd"
-#   cleanup_on_fail = true
-#   version = "9.2.4"
-#   namespace = "argocd"
-#   create_namespace = true
-# }
+variable "argo_config_values_path" {
+  type        = string
+  description = "Path to init values file for ArgoCD"
+  default     = "./argo-cd-values.yaml"
+}
+
+variable "github_app_key_path" {
+  type = string
+}
 
 resource "helm_release" "argocd" {
-  name = "argocd"
-  repository = "file://${path.module}/argo-cd"
-  chart = "argo-cd"
-  cleanup_on_fail = true
-  version = "0.1.0"
-  namespace = "argocd"
+  name             = "argocd"
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  cleanup_on_fail  = true
+  version          = "9.2.4"
+  namespace        = "argocd"
   create_namespace = true
+  upgrade_install  = true
+  wait             = true
+  wait_for_jobs    = true
+  values           = [
+    file(var.argo_config_values_path)
+  ]
+  set_sensitive = [{
+    name  = "configs.credentialTemplates.github-repos.githubAppPrivateKey"
+    type  = "string"
+    value = file(var.github_app_key_path)
+    }, {
+    name  = "configs.repositories.ghcr-helm.password"
+    type  = "string"
+    value = var.ghcr_token
+    }
+  ]
 }
+
+# resource "helm_release" "argocd-config" {
+#   name             = "argocd-config"
+#   chart            = "argo-cd-configs"
+#   repository       = "oci://ghcr.io/rso-2024-group-12/"
+#   version          = "0.1.1"
+#   namespace        = "argocd"
+#   create_namespace = false
+#   atomic           = true
+#   set = [{
+#     name  = "githubAppInfo.privateKey"
+#     type  = "string"
+#     value = file(var.github_app_key_path)
+#   }]
+#   depends_on = [helm_release.argocd]
+# }
