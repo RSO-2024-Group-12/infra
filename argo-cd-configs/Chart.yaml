@@ -1,6 +1,9 @@
 apiVersion: v3
 name: argo-cd-configs
-description: Main Argo CD deployment for the RSO 2024 Group 12 project
+description: | 
+  Main Argo CD deployment for the RSO 2024 Group 12 project.
+  Only used by ArgoCD itself to deploy new configs for it.
+  Terraform evaluates the manifest with helm and then pushes it into the cluster.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -15,7 +18,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.2
+version: 0.2.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to

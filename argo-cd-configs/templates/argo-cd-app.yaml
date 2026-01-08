@@ -1,0 +1,42 @@
+# Application that deploys this chart with the latest image, 
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-cd-app
+  namespace: {{ .Release.Namespace }}
+  finalizers:
+    # The default behaviour is foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: argo-cd-app
+    # app.kubernetes.io/part-of: argo-cd
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/RSO-2024-Group-12/infra.git
+    # chart: argo-cd-configs
+    path: argo-cd-configs
+    targetRevision: {{ .Chart.Version | quote }}
+    helm:
+      releaseName: {{ .Chart.Name }}
+    # helm:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{ .Release.Namespace }}
+  info:
+    - name: chart
+      value: {{ .Chart.Name }}-{{ .Chart.Version }}
+    - name: Description
+      value: {{ .Chart.Description }}
+  syncPolicy:
+    automated:
+      enabled: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
