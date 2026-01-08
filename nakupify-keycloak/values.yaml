@@ -2,21 +2,16 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# dbInit:
-  # user: keycloak_user
-  # password: changeme1234
-  # database: keycloak_db
-  # schema: keycloak_schema
-
 dbInit:
   db:
     user: keycloak_user
-    # password: changeme1234
+    password:
     database: keycloak_db
     schema: keycloak_schema
-    # serviceName: 
-    useLookup: false
     hostAddress:
     hostPort:
+  pgAdminUserSecret:
+    secretName:
+    secretKey:
 
 serviceName: keycloak
