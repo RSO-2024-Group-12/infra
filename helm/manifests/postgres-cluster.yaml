@@ -16,7 +16,7 @@ spec:
     name: nakupify-db-postgres-secret
   storage:
     size: 5Gi
-    storageClass: standard
+    storageClass: managed
   postgresql:
     parameters:
       shared_buffers: "256MB"

@@ -20,4 +20,4 @@ spec:
   storage:
     type: persistent-claim
     size: 5Gi
-    class: standard
+    class: managed
