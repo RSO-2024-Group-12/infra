@@ -1,0 +1,22 @@
+autoCreateUserSchema: true
+  # name:  nakupify-postgres-db # Name of the PostgresCluster, default is .Release.Name
+  #monitoring: true
+users:
+    # this user is only used to create the initial database, and roles/users, secret is created automatically
+  - name: "initializer"
+    password:  # will generate a random password if not set
+      type: ASCII
+    # databases:
+    #   - "nakupify_db"
+    options: "SUPERUSER,CREATEDB,CREATEROLE"
+  - name: "keycloakuser"
+    password:  # will generate a random password if not set
+      type: ASCII
+    databases:
+      - "keycloak_db"
+    options: "NOSUPERUSER,CREATEDB,CREATEROLE"
+  # also can create multiple instances
+instanceName: nakupify-postgres-instance
+instanceSize: 1Gi
+instanceMemory: 1Gi # azure VMs are too weak for more
+instanceCPU: 1 # azure VMs are too weak for more
