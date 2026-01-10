@@ -23,8 +23,8 @@ version: 0.1.5
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
 
-dependencies:
-  - name: db-init
-    version: 0.1.4
-    repository: "oci://ghcr.io/rso-2024-group-12/charts"
-    alias: dbInit
+# dependencies:
+#   - name: db-init
+#     version: 0.1.4
+#     repository: "oci://ghcr.io/rso-2024-group-12/charts"
+#     alias: dbInit

@@ -1,6 +1,0 @@
-dependencies:
-- name: db-init
-  repository: file://../db-init
-  version: 0.1.0
-digest: sha256:d949cd710f2476c1e3179729a77bf001b1e0dae48957cfb1c3a23905e70344de
-generated: "2026-01-06T18:39:05.65122268+01:00"

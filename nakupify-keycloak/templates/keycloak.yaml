@@ -1,54 +1,90 @@
-{{- $secretName := printf "%s-%s-db-secret" .Release.Name .Values.dbInit.db.user -}}
 apiVersion: k8s.keycloak.org/v2alpha1
 kind: Keycloak
 metadata:
-  name: {{ include "nakupify-keycloak.fullname" . }}
+  name: {{ include "nakupify-keycloak.fullname" . }}-admin
   namespace: {{ .Release.Namespace }}
   labels: 
     {{- include "nakupify-keycloak.labels" . | nindent 4 }}
 spec:
   db:
     vendor: postgres
-    # usernameSecret:
-    #   name: {{ $secretName }}
-    #   key: user
-    # passwordSecret:
-    #   name: {{ $secretName }}
-    #   key: password
     poolInitialSize: 2
     poolMinSize: 2
     poolMaxSize: 10 # more connections needed to avoid the "acquisition timeout"
   env:
     - name: KC_DB_URL
       secret:
-        name: {{ $secretName }}
-        key: "jdbc-uri"
-    - name: KC_DB_SCHEMA
-      secret:
-        name: {{ $secretName }}
-        key: schema
-    # - name: KC_DB_URL_DATABASE
-    #   secret:
-    #     name: {{ $secretName }}
-    #     key: database
+        name: {{ .Values.secret.name }}
+        key: {{ .Values.secret.jdbcUriKey }}
     - name: "QUARKUS_DATASOURCE_JDBC_ACQUISITION_TIMEOUT" # or perhaps this works?
       value: "10s" 
   http:
     httpEnabled: true
     httpPort: 8180
-    #httpsPort: 8543
-    # tlsSecret: my-tls-secret
   hostname:
     hostname: "http://localhost:8180/"
-    admin: "http://localhost:8180/"
+    # admin: "http://localhost:8180/"
     strict: false
-    backchannelDynamic: true
+    backchannelDynamic: false
+  networkPolicy:
+    enabled: true
+    http:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Release.Namespace }}
+
   features:
+    # all are enabled by default
     enabled:
-      - docker
-      - authorization
+      - docker # disabled by default
       - admin
-    disabled:
+      - admin-api
+      - authorization
       - step-up-authentication
+    disabled:
   transaction:
     xaEnabled: false
+  bootstrapAdmin:
+    secret: {{ include "nakupify-keycloak.fullname" . }}-bootstrap-admin-secret
+---
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: {{ include "nakupify-keycloak.fullname" . }}-public
+  namespace: {{ .Release.Namespace }}
+  labels: 
+    {{- include "nakupify-keycloak.labels" . | nindent 4 }}
+spec:
+  db:
+    vendor: postgres
+    poolInitialSize: 2
+    poolMinSize: 2
+    poolMaxSize: 10 # more connections needed to avoid the "acquisition timeout"
+  env:
+    - name: KC_DB_URL
+      secret:
+        name: {{ .Values.secret.name }}
+        key: {{ .Values.secret.jdbcUriKey }}
+    - name: "QUARKUS_DATASOURCE_JDBC_ACQUISITION_TIMEOUT" # or perhaps this works?
+      value: "10s" 
+  http:
+    httpEnabled: true
+    #tlsSecret: my-tls-secret
+  hostname:
+    hostname: "https://{{ .Release.Name }}.{{ .Chart.Name }}-service/"
+    # admin: "http://localhost:8180/"
+    strict: false
+    backchannelDynamic: true
+
+  features:
+    enabled:
+      # - docker
+      - authorization
+      - step-up-authentication
+    disabled:
+      - "admin-api"
+      - "admin"
+      - "admin-fine-grained-authz"
+  transaction:
+    xaEnabled: false
+  bootstrapAdmin:

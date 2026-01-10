@@ -1,12 +1,17 @@
-
+# So far this file is useless
 dbInit:
   db:
     user: keycloak-user
     password:
     database: keycloak_db
     schema: keycloak_schema
-    hostAddress:
-    hostPort:
+    hostAddress: postgres-cluster-primary
+    hostPort: 5432
   pgAdminUserSecret:
-    secretName:
-    secretKey:
+    secretName: postgres-cluster-pguser-initializer
+    secretKey: uri
+
+secret:
+  name: postgres-cluster-pguser-keycloakuser
+  jdbcUriKey: jdbc-uri
+  schemaKey: schema
